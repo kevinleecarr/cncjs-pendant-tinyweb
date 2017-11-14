@@ -1,8 +1,26 @@
 $(function() {
 
+var ACTIVE_STATE_HOLD = 'Hold';
+
 var root = window;
 var cnc = root.cnc || {};
 var controller = cnc.controller;
+
+$( "body" ).keyup(function(event) {
+  if ( event.which == 27 ) { // escape
+    controller.command('feedhold');
+    return;
+  }
+
+  if ( event.which == 192 ) { // tilde / grave
+    if (controller.state.status.activeState == ACTIVE_STATE_HOLD) {
+      controller.command('cyclestart');
+    } else {
+      controller.command('feedhold');
+    }
+    return;
+  }
+});
 
 controller.on('serialport:list', function(list) {
     var $el = $('[data-route="connection"] select[data-name="port"]');
@@ -344,7 +362,7 @@ controller.on('TinyG:state', function(data) {
 
 controller.listAllPorts();
 
-// Workspace 
+// Workspace
 $('[data-route="workspace"] [data-name="port"]').val('');
 $('[data-route="workspace"] [data-name="btn-close"]').on('click', function() {
     controller.closePort();
