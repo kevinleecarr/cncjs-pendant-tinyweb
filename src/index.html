@@ -122,17 +122,24 @@
     <div class="axis-position">
         <div class="container-fluid">
             <div class="row no-gutter">
-                <div class="col-xs-2">
-                </div>
-                <div class="col-xs-10">
-                    <div class="col-xs-4">
-                        <div class="axis-label">X</div>
+              <div class="col-xs-2">
+                Jog:
+              </div>
+                <div class="col-xs-10 btn-group" data-toggle="buttons">
+                  <div class="col-xs-4">
+                      <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option1" checked="checked" onchange="cnc.setJogAxis('X');">X</input>
+                      </label>
                     </div>
                     <div class="col-xs-4">
-                        <div class="axis-label">Y</div>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option2" onchange="cnc.setJogAxis('Y');">Y</input>
+                      </label>
                     </div>
                     <div class="col-xs-4">
-                        <div class="axis-label">Z</div>
+                      <label class="btn btn-primary">
+                        <input type="radio" name="options" id="option3" onchange="cnc.setJogAxis('Z');">Z</input>
+                      </label>
                     </div>
                 </div>
             </div>
@@ -405,5 +412,6 @@ $('document').ready(function() {
 </script>
 <script src="controller.js"></script>
 <script src="app.js"></script>
+<script src="jogwheel.js"></script>
 </body>
 </html>

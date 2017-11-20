@@ -1,10 +1,12 @@
 $(function() {
-
-var ACTIVE_STATE_HOLD = 'Hold';
-
 var root = window;
 var cnc = root.cnc || {};
+cnc.jogAxis = "X";
 var controller = cnc.controller;
+var view = {};
+root.view = view;
+
+var ACTIVE_STATE_HOLD = 'Hold';
 
 $( "body" ).keyup(function(event) {
   if ( event.which == 27 ) { // escape
@@ -103,15 +105,30 @@ controller.on('serialport:error', function(options) {
 
 });
 
+// cnc.jog({X: distance});
+cnc.jog = function(params) {
+    params = params || {};
+    var s = _.map(params, (value, letter) => {
+        return '' + letter + value;
+    }).join(' ');
+    console.log('G91 G0 ' + s);
+    controller.command('gcode', 'G91 G0 ' + s); // relative distance
+    controller.command('gcode', 'G90'); // absolute distance
+};
+
+cnc.setJogAxis = function(axis) {
+  cnc.jogAxis = axis;
+};
+
+view.getJogIncrement = function() {
+  return Number($('[data-route="axes"] select[data-name="select-distance"]').val()) || 0;
+};
+
+view.getJogAxis = function() {
+  return cnc.jogAxis;
+};
+
 cnc.sendMove = function(cmd) {
-    var jog = function(params) {
-        params = params || {};
-        var s = _.map(params, (value, letter) => {
-            return '' + letter + value;
-        }).join(' ');
-        controller.command('gcode', 'G91 G0 ' + s); // relative distance
-        controller.command('gcode', 'G90'); // absolute distance
-    };
     var move = function(params) {
         params = params || {};
         var s = _.map(params, (value, letter) => {
@@ -119,7 +136,7 @@ cnc.sendMove = function(cmd) {
         }).join(' ');
         controller.command('gcode', 'G0 ' + s);
     };
-    var distance = Number($('[data-route="axes"] select[data-name="select-distance"]').val()) || 0;
+    var distance = view.getJogIncrement();
 
     var fn = {
         'G28': function() {
@@ -141,34 +158,34 @@ cnc.sendMove = function(cmd) {
             move({ Z: 0 });
         },
         'X-Y+': function() {
-            jog({ X: -distance, Y: distance });
+            cnc.jog({ X: -distance, Y: distance });
         },
         'X+Y+': function() {
-            jog({ X: distance, Y: distance });
+            cnc.jog({ X: distance, Y: distance });
         },
         'X-Y-': function() {
-            jog({ X: -distance, Y: -distance });
+            cnc.jog({ X: -distance, Y: -distance });
         },
         'X+Y-': function() {
-            jog({ X: distance, Y: -distance });
+            cnc.jog({ X: distance, Y: -distance });
         },
         'X-': function() {
-            jog({ X: -distance });
+            cnc.jog({ X: -distance });
         },
         'X+': function() {
-            jog({ X: distance });
+            cnc.jog({ X: distance });
         },
         'Y-': function() {
-            jog({ Y: -distance });
+            cnc.jog({ Y: -distance });
         },
         'Y+': function() {
-            jog({ Y: distance });
+            cnc.jog({ Y: distance });
         },
         'Z-': function() {
-            jog({ Z: -distance });
+            cnc.jog({ Z: -distance });
         },
         'Z+': function() {
-            jog({ Z: distance });
+            cnc.jog({ Z: distance });
         }
     }[cmd];
 
@@ -245,7 +262,7 @@ function renderGrblState(data) {
 
     wpos.x = (wpos.x * factor).toFixed(digits);
     wpos.y = (wpos.y * factor).toFixed(digits);
-    wpos.z = (wpos.y * factor).toFixed(digits);
+    wpos.z = (wpos.z * factor).toFixed(digits);
 
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
     $('[data-route="axes"] [data-name="active-state"]').text(activeState);
