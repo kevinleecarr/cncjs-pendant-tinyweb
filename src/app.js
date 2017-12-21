@@ -2,6 +2,8 @@ $(function() {
 var root = window;
 var cnc = root.cnc || {};
 cnc.jogAxis = "X";
+cnc.jogIncrement = .1;
+
 var controller = cnc.controller;
 var view = {};
 root.view = view;
@@ -66,18 +68,13 @@ controller.on('serialport:open', function(options) {
     Cookies.set('cnc.port', port);
     Cookies.set('cnc.baudrate', baudrate);
 
-    if (controllerType === 'Grbl') {
-        // Read the settings so we can determine the units for position reports
-        // This will trigger a Grbl:settings callback to set grblReportingUnits
-
-        // This has a problem: The first status report arrives before the
-        // settings report, so interpreting the numbers from the first status
-        // report is ambiguous.  Subsequent status reports are interpreted correctly.
-        // We work around that by deferring status reports until the settings report.
-        controller.writeln('$$');
-    }
-
     root.location = '#/axes';
+});
+
+controller.on('startup', (res) => {
+  if (cnc.controllerType === 'Grbl') {
+      controller.writeln('$$');
+  }
 });
 
 controller.on('serialport:close', function(options) {
@@ -120,13 +117,25 @@ cnc.setJogAxis = function(axis) {
   cnc.jogAxis = axis;
 };
 
+cnc.setJogIncrement = function(increment) {
+  return cnc.jogIncrement = increment;
+};
+
 view.getJogIncrement = function() {
-  return Number($('[data-route="axes"] select[data-name="select-distance"]').val()) || 0;
+  return cnc.jogIncrement;
 };
 
 view.getJogAxis = function() {
   return cnc.jogAxis;
 };
+
+cnc.sendJogAxis = function(dir) {
+  cnc.sendMove('' + cnc.jogAxis + dir);
+}
+
+cnc.zeroMachine = function() {
+  controller.command('gcode', 'G10 L20 P1 ' + cnc.jogAxis + '0');
+}
 
 cnc.sendMove = function(cmd) {
     var move = function(params) {
@@ -143,7 +152,7 @@ cnc.sendMove = function(cmd) {
             controller.command('gcode', 'G28');
         },
         'G30': function() {
-            controller.command('gcode', 'G30');
+            controller.command('gcode', 'G30 P1');
         },
         'X0Y0Z0': function() {
             move({ X: 0, Y: 0, Z: 0 })
