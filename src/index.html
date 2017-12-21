@@ -116,55 +116,6 @@
             </div>
         </div>
     </div>
-    <div class="axis-position control-pad">
-        <div class="container-fluid">
-            <div class="row no-gutter">
-              <div class="col-xs-3">
-                Jog:
-              </div>
-              <div class="col-xs-9 btn-group" data-toggle="buttons">
-                <label style="width: 33%;" label-default="" class="btn btn-default active">
-                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('X');">X</label>
-                <label style="width: 33%;" label-default="" class="btn btn-default">
-                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('Y');">Y</label>
-                <label style="width: 33%;" label-default="" class="btn btn-default">
-                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('Z');">Z</label>
-              </div>
-            </div>
-            <div class="row no-gutter">
-                <div class="col-xs-3" data-name="mpos-label">
-                    MPos:
-                </div>
-                <div class="col-xs-9">
-                    <div class="col-xs-4">
-                        <div class="axis-position" data-name="mpos-x">0.000</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="axis-position" data-name="mpos-y">0.000</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="axis-position" data-name="mpos-z">0.000</div>
-                    </div>
-                </div>
-            </div>
-            <div class="row no-gutter">
-                <div class="col-xs-3" data-name="wpos-label">
-                    WPos:
-                </div>
-                <div class="col-xs-9">
-                    <div class="col-xs-4">
-                        <div class="axis-position" data-name="wpos-x">0.000</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="axis-position" data-name="wpos-y">0.000</div>
-                    </div>
-                    <div class="col-xs-4">
-                        <div class="axis-position" data-name="wpos-z">0.000</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="control-pad">
         <div class="container-fluid">
             <div class="row no-gutter">
@@ -199,6 +150,64 @@
                         <input type="radio" name="incButtons" onchange="cnc.setJogIncrement(.0001);" value=".0001"/>.0001</label>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="axis-position control-pad">
+        <div class="container-fluid">
+            <div class="row no-gutter">
+              <div class="col-xs-3">
+                Jog:
+              </div>
+              <div class="col-xs-9 btn-group" data-toggle="buttons">
+                <label style="width: 33%;" label-default="" class="btn btn-default active">
+                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('X');">X</label>
+                <label style="width: 33%;" label-default="" class="btn btn-default">
+                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('Y');">Y</label>
+                <label style="width: 33%;" label-default="" class="btn btn-default">
+                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('Z');">Z</label>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="axis-position control-pad" style="padding-top: 20px; padding-bottom: 20px;">
+        <div class="container-fluid">
+            <div class="row no-gutter">
+                <div class="col-xs-3" data-name="mpos-label">
+                    MPos:
+                </div>
+                <div class="col-xs-9">
+                    <div class="col-xs-4">
+                        <div class="axis-position" data-name="mpos-x">0.000</div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="axis-position" data-name="mpos-y">0.000</div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="axis-position" data-name="mpos-z">0.000</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-gutter">
+                <div class="col-xs-3" data-name="wpos-label">
+                    WPos:
+                </div>
+                <div class="col-xs-9">
+                    <div class="col-xs-4">
+                        <div class="axis-position" data-name="wpos-x">0.000</div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="axis-position" data-name="wpos-y">0.000</div>
+                    </div>
+                    <div class="col-xs-4">
+                        <div class="axis-position" data-name="wpos-z">0.000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-pad">
+        <div class="container-fluid">
             <div class="row no-gutter">
                 <div class="col-xs-2">
                     <button
