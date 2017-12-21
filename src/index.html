@@ -124,11 +124,11 @@
               </div>
               <div class="col-xs-9 btn-group" data-toggle="buttons">
                 <label style="width: 33%;" label-default="" class="btn btn-default active">
-                    <input type="radio" onchange="cnc.setJogAxis('X');">X</label>
+                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('X');">X</label>
                 <label style="width: 33%;" label-default="" class="btn btn-default">
-                    <input type="radio" onchange="cnc.setJogAxis('Y');">Y</label>
+                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('Y');">Y</label>
                 <label style="width: 33%;" label-default="" class="btn btn-default">
-                    <input type="radio" onchange="cnc.setJogAxis('Z');">Z</label>
+                    <input type="radio" name="xyzButtons" onchange="cnc.setJogAxis('Z');">Z</label>
               </div>
             </div>
             <div class="row no-gutter">
@@ -190,13 +190,13 @@
                 </div>
                 <div class="col-xs-8 btn-group" data-toggle="buttons">
                     <label style="width: 25%;" label-default="" class="btn btn-default active">
-                        <input type="radio" onchange="cnc.setJogIncrement(.1);"/>.1</label>
+                        <input type="radio" name="incButtons" onchange="cnc.setJogIncrement(.1);" value=".1"/>.1</label>
                     <label style="width: 25%;" label-default="" class="btn btn-default">
-                        <input type="radio" onchange="cnc.setJogIncrement(.01);"/>.01</label>
+                        <input type="radio" name="incButtons" onchange="cnc.setJogIncrement(.01);" value=".01"/>.01</label>
                     <label style="width: 25%;" label-default="" class="btn btn-default">
-                        <input type="radio" onchange="cnc.setJogIncrement(.001);"/>.001</label>
+                        <input type="radio" name="incButtons" onchange="cnc.setJogIncrement(.001);" value=".001"/>.001</label>
                     <label style="width: 25%;" label-default="" class="btn btn-default">
-                        <input type="radio" onchange="cnc.setJogIncrement(.0001);"/>.0001</label>
+                        <input type="radio" name="incButtons" onchange="cnc.setJogIncrement(.0001);" value=".0001"/>.0001</label>
                 </div>
             </div>
             <div class="row no-gutter">
