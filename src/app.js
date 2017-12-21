@@ -48,6 +48,16 @@ controller.on('serialport:list', function(list) {
         $('[data-route="connection"] select[data-name="baudrate"]').val(cnc.baudrate);
     }
 
+    // KLC: fix this later
+    var controllerType = 'Grbl';
+    var port = '/dev/ttyUSB0';
+    var baudrate = 115200;
+
+    controller.openPort(port, {
+        controllerType: controllerType,
+        baudrate: Number(baudrate)
+    });
+
 });
 
 controller.on('serialport:open', function(options) {
