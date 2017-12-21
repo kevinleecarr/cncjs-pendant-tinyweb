@@ -1,3 +1,5 @@
+body { cursor: none !important; }
+
 [data-route="workspace"] {
   padding: 10px;
 }
@@ -50,7 +52,7 @@
   padding: 0 8px;
 }
 [data-route="axes"] .axis-position {
-  text-align: right;
+  text-align: center;
 }
 [data-route="axes"] .rotate-45deg {
   transform: rotate(45deg);
@@ -91,8 +93,8 @@
   padding-bottom: 0;
 }
 [data-route="axes"] .control-pad .btn {
-  padding-top: 10vh;
-  padding-bottom: 10vh;
+  padding-top: 5vh;
+  padding-bottom: 5vh;
   width: 100%;
   height: 100%;
   padding-left: 0;
