@@ -119,7 +119,7 @@
     <div class="control-pad">
         <div class="container-fluid">
             <div class="row no-gutter">
-                <div class="col-xs-2">
+                <div class="col-xs-3">
                     <button
                         type="button"
                         class="btn btn-default"
@@ -129,17 +129,7 @@
                         Jog +
                     </button>
                 </div>
-                <div class="col-xs-2">
-                    <button
-                        type="button"
-                        class="btn btn-default"
-                        title="Move Axis-"
-                        onclick="cnc.sendJogAxis('-')"
-                    >
-                        Jog -
-                    </button>
-                </div>
-                <div class="col-xs-8 btn-group" data-toggle="buttons">
+                <div class="col-xs-9 btn-group" data-toggle="buttons">
                     <label style="width: 25%;" label-default="" class="btn btn-default active">
                         <input type="radio" name="incButtons" onchange="cnc.setJogIncrement(.1);" value=".1"/>.1</label>
                     <label style="width: 25%;" label-default="" class="btn btn-default">
@@ -155,8 +145,16 @@
     <div class="axis-position control-pad">
         <div class="container-fluid">
             <div class="row no-gutter">
+
               <div class="col-xs-3">
-                Jog:
+                  <button
+                      type="button"
+                      class="btn btn-default"
+                      title="Move Axis-"
+                      onclick="cnc.sendJogAxis('-')"
+                  >
+                      Jog -
+                  </button>
               </div>
               <div class="col-xs-9 btn-group" data-toggle="buttons">
                 <label style="width: 33%;" label-default="" class="btn btn-default active">
