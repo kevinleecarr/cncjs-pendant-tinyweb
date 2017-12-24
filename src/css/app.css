@@ -118,9 +118,9 @@ body { cursor: none !important; }
 }
 
 [data-route="axes"] .control-pad .btn-toprow {
-    height: 52px;
+    height: 56px;
+    line-height: 56px;
     padding: 0px;
-    line-height: 52px;
 }
 
 [data-route="axes"] .control-pad .jog-btn {
