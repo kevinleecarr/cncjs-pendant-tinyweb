@@ -1,12 +1,31 @@
 $(function() {
 var root = window;
 var cnc = root.cnc || {};
-cnc.jogAxis = "X";
-cnc.jogIncrement = .1;
-
 var controller = cnc.controller;
 var view = {};
 root.view = view;
+cnc.units = 'mm';
+
+view.getJogAxis = function() {
+  return cnc.jogAxis;
+};
+
+cnc.updateModalView = function(units) {
+  cnc.units = units;
+  $('[data-route="axes"] [data-name="travelToTile"]').text("Travel to WPos " + view.getJogAxis() + " (" + units + "):");
+}
+
+cnc.setJogAxis = function(axis) {
+  cnc.jogAxis = axis;
+  cnc.updateModalView(cnc.units);
+};
+
+cnc.setJogIncrement = function(increment) {
+  return cnc.jogIncrement = increment;
+};
+
+cnc.setJogAxis("X");
+cnc.setJogIncrement(.1);
 
 var ACTIVE_STATE_HOLD = 'Hold';
 
@@ -123,21 +142,10 @@ cnc.jog = function(params) {
     controller.command('gcode', 'G90'); // absolute distance
 };
 
-cnc.setJogAxis = function(axis) {
-  cnc.jogAxis = axis;
-};
-
-cnc.setJogIncrement = function(increment) {
-  return cnc.jogIncrement = increment;
-};
-
 view.getJogIncrement = function() {
   return cnc.jogIncrement;
 };
 
-view.getJogAxis = function() {
-  return cnc.jogAxis;
-};
 
 cnc.sendJogAxis = function(dir) {
   cnc.sendMove('' + cnc.jogAxis + dir);
@@ -147,14 +155,15 @@ cnc.zeroMachine = function() {
   controller.command('gcode', 'G10 L20 P1 ' + cnc.jogAxis + '0');
 }
 
+cnc.move = function(params) {
+  params = params || {};
+  var s = _.map(params, (value, letter) => {
+      return '' + letter + value;
+  }).join(' ');
+  controller.command('gcode', 'G0 ' + s);
+}
+
 cnc.sendMove = function(cmd) {
-    var move = function(params) {
-        params = params || {};
-        var s = _.map(params, (value, letter) => {
-            return '' + letter + value;
-        }).join(' ');
-        controller.command('gcode', 'G0 ' + s);
-    };
     var distance = view.getJogIncrement();
 
     var fn = {
@@ -165,16 +174,16 @@ cnc.sendMove = function(cmd) {
             controller.command('gcode', 'G30 P1');
         },
         'X0Y0Z0': function() {
-            move({ X: 0, Y: 0, Z: 0 })
+            cnc.move({ X: 0, Y: 0, Z: 0 })
         },
         'X0': function() {
-            move({ X: 0 });
+            cnc.move({ X: 0 });
         },
         'Y0': function() {
-            move({ Y: 0 });
+            cnc.move({ Y: 0 });
         },
         'Z0': function() {
-            move({ Z: 0 });
+            cnc.move({ Z: 0 });
         },
         'X-Y+': function() {
             cnc.jog({ X: -distance, Y: distance });
@@ -257,21 +266,23 @@ function renderGrblState(data) {
 
     var mlabel = 'MPos:';
     var wlabel = 'WPos:';
-
+    var units = "mm";
     switch (parserstate.modal.units) {
     case 'G20':
-        mlabel = 'MPos (in):';
-        wlabel = 'WPos (in):';
         digits = 4;
         factor = grblReportingUnits === 0 ? 1/25.4 : 1.0 ;
+        units = "in"
         break;
     case 'G21':
-        mlabel = 'MPos (mm):';
-        wlabel = 'WPos (mm):';
         digits = 3;
         factor = grblReportingUnits === 0 ? 1.0 : 25.4;
         break;
     }
+
+    mlabel = 'MPos (' + units + '):';
+    wlabel = 'WPos (' + units + '):';
+
+    cnc.updateModalView(units);
 
     //console.log(grblReportingUnits, factor);
 
@@ -335,6 +346,7 @@ controller.on('Smoothie:state', function(data) {
     $('[data-route="axes"] [data-name="wpos-x"]').text(wpos.x);
     $('[data-route="axes"] [data-name="wpos-y"]').text(wpos.y);
     $('[data-route="axes"] [data-name="wpos-z"]').text(wpos.z);
+    cnc.updateModalView('unknown units');
 });
 
 controller.on('TinyG:state', function(data) {
@@ -360,6 +372,7 @@ controller.on('TinyG:state', function(data) {
     var canClick = [READY, STOP, END, RUN].indexOf(machineState) >= 0;
     var mlabel = 'MPos:';
     var wlabel = 'WPos:';
+    var units = 'mm';
     switch (sr.modal.units) {
     case 'G20':
         mlabel = 'MPos (in):';
@@ -372,6 +385,7 @@ controller.on('TinyG:state', function(data) {
         wpos.x = Number(wpos.x).toFixed(4);
         wpos.y = Number(wpos.y).toFixed(4);
         wpos.z = Number(wpos.z).toFixed(4);
+        units = "in";
         break;
     case 'G21':
         mlabel = 'MPos (mm):';
@@ -383,6 +397,7 @@ controller.on('TinyG:state', function(data) {
         wpos.y = Number(wpos.y).toFixed(3);
         wpos.z = Number(wpos.z).toFixed(3);
     }
+    cnc.updateModalView(units);
 
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
     $('[data-route="axes"] [data-name="active-state"]').text(stateText);
@@ -425,5 +440,12 @@ $('[data-route="connection"] [data-name="btn-open"]').on('click', function() {
 $('[data-route="axes"] [data-name="btn-dropdown"]').dropdown();
 $('[data-route="axes"] [data-name="active-state"]').text('Not connected');
 $('[data-route="axes"] select[data-name="select-distance"]').val('1');
+
+$('#myModal').on('shown.bs.modal', function () {
+    setTimeout(function (){
+        $('#travelToInput').focus();
+    }, 100);
+
+})
 
 });
