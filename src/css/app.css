@@ -117,10 +117,13 @@ body { cursor: none !important; }
   padding-right: 0;
 }
 
-[data-route="axes"] .control-pad .jog-btn {
-    height: 48px;
+[data-route="axes"] .control-pad .btn-toprow {
+    height: 52px;
     padding: 0px;
-    line-height: 48px;
+    line-height: 52px;
+}
+
+[data-route="axes"] .control-pad .jog-btn {
     font-size: 18px;
 }
 
