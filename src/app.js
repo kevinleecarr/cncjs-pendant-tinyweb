@@ -441,10 +441,27 @@ $('[data-route="axes"] [data-name="btn-dropdown"]').dropdown();
 $('[data-route="axes"] [data-name="active-state"]').text('Not connected');
 $('[data-route="axes"] select[data-name="select-distance"]').val('1');
 
+view.modalFresh = false;
+
 $('#myModal').on('shown.bs.modal', function () {
     setTimeout(function (){
+        view.modalFresh = true;
         $('#travelToInput').focus();
     }, 100);
+
+$("#travelToInput").keydown(function(event) {
+    if (event.keyCode === 13) {
+    } else if (view.modalFresh) {
+        $('#travelToInput').val("");
+    }
+    view.modalFresh = false;
+});
+
+$("#travelToInput").keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#myModalOk").click();
+    }
+});
 
 })
 
