@@ -448,6 +448,7 @@ $('#myModal').on('shown.bs.modal', function () {
         view.modalFresh = true;
         $('#travelToInput').focus();
     }, 100);
+});
 
 $("#travelToInput").keydown(function(event) {
     if (event.keyCode === 13) {
@@ -463,18 +464,18 @@ $("#travelToInput").keyup(function(event) {
     }
 });
 
-$(document).observe('keydown', function (e) {
+$(document).keydown(function (e) {
     switch (e.keyCode) {
-        case Event.KEY_LEFT:
+        case 37: // left
             cnc.sendMove("X+");
             break;
-        case Event.KEY_RIGHT:
+        case 39: // right
             cnc.sendMove("X-");
             break;
-        case Event.KEY_UP:
+        case 38: // up
             cnc.sendMove("Y-");
             break;
-        case Event.KEY_DOWN:
+        case 40: // down
             cnc.sendMove("Y+");
             break;
         case 33: // page up
@@ -485,7 +486,5 @@ $(document).observe('keydown', function (e) {
             break;
     }
 });
-
-})
 
 });
