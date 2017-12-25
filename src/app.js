@@ -463,6 +463,29 @@ $("#travelToInput").keyup(function(event) {
     }
 });
 
+$(document).observe('keydown', function (e) {
+    switch (e.keyCode) {
+        case Event.KEY_LEFT:
+            cnc.sendMove("X+");
+            break;
+        case Event.KEY_RIGHT:
+            cnc.sendMove("X-");
+            break;
+        case Event.KEY_UP:
+            cnc.sendMove("Y-");
+            break;
+        case Event.KEY_DOWN:
+            cnc.sendMove("Y+");
+            break;
+        case 33: // page up
+            cnc.sendMove("Z+");
+            break;
+        case 34: // page down
+            cnc.sendMove("Z-");
+            break;
+    }
+});
+
 })
 
 });
