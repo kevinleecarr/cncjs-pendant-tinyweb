@@ -442,8 +442,18 @@ $('[data-route="axes"] [data-name="active-state"]').text('Not connected');
 $('[data-route="axes"] select[data-name="select-distance"]').val('1');
 
 view.modalFresh = false;
+view.modalOpen = false;
 
 $('#myModal').on('shown.bs.modal', function () {
+    view.modalOpen = true;
+    setTimeout(function (){
+        view.modalFresh = true;
+        $('#travelToInput').focus();
+    }, 100);
+});
+
+$('#myModal').on('hidden.bs.modal', function () {
+    view.modalOpen = false;
     setTimeout(function (){
         view.modalFresh = true;
         $('#travelToInput').focus();
@@ -465,6 +475,9 @@ $("#travelToInput").keyup(function(event) {
 });
 
 $(document).keydown(function (e) {
+    if (view.modalOpen) {
+       return;
+    }
     switch (e.keyCode) {
         case 37: // left
             cnc.sendMove("X+");
