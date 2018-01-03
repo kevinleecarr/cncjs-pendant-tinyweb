@@ -13,6 +13,7 @@ view.getJogAxis = function() {
 cnc.updateModalView = function(units) {
   cnc.units = units;
   $('[data-route="axes"] [data-name="travelToTitle"]').text("WPos " + view.getJogAxis() + " (" + units + "):");
+  $('[data-route="axes"] [data-name="offsetTitle"]').text("Offset " + view.getJogAxis() + " (" + units + "):");
 }
 
 cnc.setJogAxis = function(axis) {
@@ -151,8 +152,8 @@ cnc.sendJogAxis = function(dir) {
   cnc.sendMove('' + cnc.jogAxis + dir);
 }
 
-cnc.zeroMachine = function() {
-  controller.command('gcode', 'G10 L20 P1 ' + cnc.jogAxis + '0');
+cnc.zeroMachine = function(offset) {
+  controller.command('gcode', 'G10 L20 P1 ' + cnc.jogAxis + parseFloat(offset));
 }
 
 cnc.move = function(params) {
@@ -471,6 +472,12 @@ $('#myModal').on('shown.bs.modal', function () {
     }, 100);
 });
 
+$('#myModalToolOffset').on('shown.bs.modal', function () {
+    setTimeout(function (){
+        $('#offsetInput').focus();
+    }, 100);
+});
+
 $('#myModalSpindle').on('shown.bs.modal', function () {
     setTimeout(function (){
         $('#spindleInput').focus();
@@ -491,9 +498,15 @@ $('[data-route="axes"] .resetOnFreshModal').keydown(function(event) {
     view.modalFresh = false;
 });
 
-$("#travelToInput").keyup(function(event) {
+$('[data-route="axes"] #travelToInput').keyup(function(event) {
     if (event.keyCode === 13) {
         $("#myModalOk").click();
+    }
+});
+
+$('[data-route="axes"] #offsetInput').keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#myModalToolOffsetOk").click();
     }
 });
 
