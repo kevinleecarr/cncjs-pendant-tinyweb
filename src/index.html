@@ -120,7 +120,15 @@
         <div class="container-fluid">
             <div class="row no-gutter">
                 <div class="col-xs-3">
-
+                  <button
+                      type="button"
+                      class="btn btn-default jog-btn btn-toprow "
+                      title="Spindle"
+                      onclick="$('input#spindleInput').focus();"
+                      data-toggle="modal" data-target="#myModalSpindle"
+                  >
+                      Spindle
+                  </button>
                 </div>
                 <div class="col-xs-9 btn-group" data-toggle="buttons">
                     <label style="width: 25%;" label-default="" class="btn btn-default btn-toprow  active">
@@ -143,7 +151,7 @@
                   <button
                       type="button"
                       class="btn btn-default jog-btn btn-toprow "
-                      title="Move Axis-"
+                      title="Goto"
                       onclick="$('input#travelToInput').focus();"
                       data-toggle="modal" data-target="#myModal"
                   >
@@ -155,18 +163,81 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 id="travelToTile" data-name="travelToTile" class="modal-title">Travel to WPos X (in):</h4>
+        <h4 id="travelToTitle2" class="modal-title">Travel To</h4>
       </div>
       <div class="modal-body">
-        <input id="travelToInput" type="number" step="0.0001"/>
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label for="travelToTitle" class="control-label col-xs-3" data-name="travelToTitle">WPos X (in): </label>
+            <div class="col-xs-6">
+                <input id="travelToInput" class="form-control resetOnFreshModal" type="number" step="0.0001"/>
+            </div>
+          </div>
+        </form>
       </div>
       <div class="modal-footer">
-        <br/>
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <br/>
-        <br/>
-        <button id="myModalOk" type="button" class="btn btn-default" data-dismiss="modal"
-            onclick="var params = {}; params[view.getJogAxis()] =  document.getElementById('travelToInput').value; cnc.move(params);">OK</button>
+        <div class="container-fluid">
+          <div class="row no-gutter">
+              <div class="col-xs-12">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+              </div>
+          </div>
+          <br/>
+          <div class="row no-gutter">
+              <div class="col-xs-12">
+                <button id="myModalOk" type="button" class="btn btn-default" data-dismiss="modal"
+                    onclick="var params = {}; params[view.getJogAxis()] =  document.getElementById('travelToInput').value; cnc.move(params);">OK</button>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Spindle Modal -->
+<div class="modal" id="myModalSpindle" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 id="spindleTitle" data-name="spindleTitle" class="modal-title">Spindle</h4>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="spindleInput" class="control-label col-xs-3">Speed (1-255): </label>
+                <div class="col-xs-6">
+                    <input id="spindleInput" class="form-control resetOnFreshModal" type="number" step="1" min="1" max="255" value="255"/>
+                </div>
+              </div>
+            </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="container-fluid">
+            <div class="row no-gutter">
+                <div class="col-xs-12">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+            <br/>
+            <div class="row no-gutter">
+                <div class="col-xs-4">
+                  <button id="myModalSpindleM3" type="button" class="btn btn-default" data-dismiss="modal"
+                      onclick="cnc.spindleM3(document.getElementById('spindleInput').value);">M3</button>
+                </div>
+                <div class="col-xs-4">
+                  <button id="myModalSpindleM4" type="button" class="btn btn-default" data-dismiss="modal"
+                          onclick="cnc.spindleM4(document.getElementById('spindleInput').value);">M4</button>
+                </div>
+                <div class="col-xs-4">
+                  <button id="myModalSpindleM5" type="button" class="btn btn-default" data-dismiss="modal"
+                          onclick="cnc.spindleM5();">M5</button>
+                </div>
+            </div>
+        </div>
       </div>
     </div>
   </div>

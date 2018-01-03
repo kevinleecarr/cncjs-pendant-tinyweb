@@ -12,7 +12,7 @@ view.getJogAxis = function() {
 
 cnc.updateModalView = function(units) {
   cnc.units = units;
-  $('[data-route="axes"] [data-name="travelToTile"]').text("Travel to WPos " + view.getJogAxis() + " (" + units + "):");
+  $('[data-route="axes"] [data-name="travelToTitle"]').text("WPos " + view.getJogAxis() + " (" + units + "):");
 }
 
 cnc.setJogAxis = function(axis) {
@@ -219,6 +219,18 @@ cnc.sendMove = function(cmd) {
 
     fn && fn();
 };
+
+cnc.spindleM3 = function(speed) {
+  controller.command('gcode', 'M3 S' + speed);
+}
+
+cnc.spindleM4 = function(speed) {
+  controller.command('gcode', 'M4 S' + speed);
+}
+
+cnc.spindleM5 = function() {
+  controller.command('gcode', 'M5');
+}
 
 controller.on('serialport:read', function(data) {
     var style = 'font-weight: bold; line-height: 20px; padding: 2px 4px; border: 1px solid; color: #222; background: #F5F5F5';
@@ -444,26 +456,37 @@ $('[data-route="axes"] select[data-name="select-distance"]').val('1');
 view.modalFresh = false;
 view.modalOpen = false;
 
-$('#myModal').on('shown.bs.modal', function () {
+$('[data-route="axes"] .modal').on('shown.bs.modal', function () {
+    view.modalFresh = true;
     view.modalOpen = true;
-    setTimeout(function (){
-        view.modalFresh = true;
-        $('#travelToInput').focus();
-    }, 100);
 });
 
-$('#myModal').on('hidden.bs.modal', function () {
+$('[data-route="axes"] .modal').on('hidden.bs.modal', function () {
     view.modalOpen = false;
+});
+
+$('#myModal').on('shown.bs.modal', function () {
     setTimeout(function (){
-        view.modalFresh = true;
         $('#travelToInput').focus();
     }, 100);
 });
 
-$("#travelToInput").keydown(function(event) {
+$('#myModalSpindle').on('shown.bs.modal', function () {
+    setTimeout(function (){
+        $('#spindleInput').focus();
+    }, 100);
+});
+
+$('#myModalSpindle').on('shown.bs.modal', function () {
+    setTimeout(function (){
+        $('#travelToInput').focus();
+    }, 100);
+});
+
+$('[data-route="axes"] .resetOnFreshModal').keydown(function(event) {
     if (event.keyCode === 13) {
     } else if (view.modalFresh) {
-        $('#travelToInput').val("");
+        $(this).val("");
     }
     view.modalFresh = false;
 });
