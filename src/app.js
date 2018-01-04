@@ -28,20 +28,20 @@ cnc.setJogIncrement = function(increment) {
 cnc.setJogAxis("X");
 cnc.setJogIncrement(.1);
 
-var ACTIVE_STATE_HOLD = 'Hold';
+const ACTIVE_STATE_HOLD = 'Hold';
+
+const WORKFLOW_STATE_RUNNING = 'running';
+const WORKFLOW_STATE_PAUSED = 'paused';
+const WORKFLOW_STATE_IDLE = 'idle';
 
 $( "body" ).keyup(function(event) {
   if ( event.which == 27 ) { // escape
-    controller.command('feedhold');
+    cnc.handlePause();
     return;
   }
 
   if ( event.which == 192 ) { // tilde / grave
-    if (controller.state.status.activeState == ACTIVE_STATE_HOLD) {
-      controller.command('cyclestart');
-    } else {
-      controller.command('feedhold');
-    }
+    cnc.handleRun();
     return;
   }
 });
@@ -99,7 +99,16 @@ controller.on('serialport:open', function(options) {
     Cookies.set('cnc.baudrate', baudrate);
 
     root.location = '#/axes';
+
+    cnc.loadPart();
 });
+
+cnc.loadPart = function() {
+  var gcode = localStorage.getItem('gcode');
+  if (gcode) {
+    cnc.controller.command("gcode:load", localStorage.getItem('gcodefilename'), gcode);
+  }
+};
 
 controller.on('startup', (res) => {
   if (cnc.controllerType === 'Grbl') {
@@ -129,7 +138,11 @@ controller.on('serialport:error', function(options) {
     console.log('Error opening serial port \'' + port + '\'');
 
     $('[data-route="connection"] [data-name="msg"]').html('<p style="color: red">Error opening serial port \'' + port + '\'</p>');
+});
 
+controller.on('gcode:load', function(name, gcode) {
+  localStorage.setItem('gcodefilename', name);
+  localStorage.setItem('gcode', gcode);
 });
 
 // cnc.jog({X: distance});
@@ -146,7 +159,6 @@ cnc.jog = function(params) {
 view.getJogIncrement = function() {
   return cnc.jogIncrement;
 };
-
 
 cnc.sendJogAxis = function(dir) {
   cnc.sendMove('' + cnc.jogAxis + dir);
@@ -223,15 +235,32 @@ cnc.sendMove = function(cmd) {
 
 cnc.spindleM3 = function(speed) {
   controller.command('gcode', 'M3 S' + speed);
-}
+};
 
 cnc.spindleM4 = function(speed) {
   controller.command('gcode', 'M4 S' + speed);
-}
+};
 
 cnc.spindleM5 = function() {
   controller.command('gcode', 'M5');
-}
+};
+
+cnc.handleRun = function() {
+  const workflowState = controller.workflowState;
+  if (workflowState === WORKFLOW_STATE_RUNNING) {
+      controller.command('gcode:pause');
+  }
+  if (workflowState === WORKFLOW_STATE_IDLE) {
+      controller.command('gcode:start');
+  }
+  if (workflowState === WORKFLOW_STATE_PAUSED) {
+      controller.command('gcode:resume');
+  }
+};
+
+cnc.handlePause = function() {
+  controller.command('gcode:pause');
+};
 
 controller.on('serialport:read', function(data) {
     var style = 'font-weight: bold; line-height: 20px; padding: 2px 4px; border: 1px solid; color: #222; background: #F5F5F5';
