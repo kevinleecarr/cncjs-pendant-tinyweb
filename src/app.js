@@ -156,6 +156,10 @@ cnc.jog = function(params) {
     controller.command('gcode', 'G90'); // absolute distance
 };
 
+view.setLocalIp = function(val) {
+    $('[data-route="axes"] [data-name="ipAddress"]').text(val + ":8282");
+};
+
 view.getJogIncrement = function() {
   return cnc.jogIncrement;
 };
@@ -485,6 +489,7 @@ $('[data-route="axes"] select[data-name="select-distance"]').val('1');
 
 view.modalFresh = false;
 view.modalOpen = false;
+
 
 $('[data-route="axes"] .modal').on('shown.bs.modal', function () {
     view.modalFresh = true;
