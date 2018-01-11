@@ -491,14 +491,14 @@ $('[data-route="wifi-settings"] [data-name="ssid"]').on('change', function() {
         $('[data-route="wifi-settings"] [data-name="ssid"]').val()
     );
 });
+$('[data-route="wifi-settings"] [data-name="btn-cancel"]').on('click', function() {
+    root.location = "#/";
+});
 
 // Workspace
 $('[data-route="workspace"] [data-name="port"]').val('');
 $('[data-route="workspace"] [data-name="btn-close"]').on('click', function() {
     controller.closePort();
-});
-$('[data-route="workspace"] [data-name="btn-wifi-settings"]').on('click', function() {
-    root.location = "#/wifi-settings";
 });
 
 //
