@@ -14,29 +14,25 @@ if (hostname == 'localhost' || hostname == '127.0.0.1') {
 
   websocket.onopen = function(evt) {
     console.log("connected to jogwheel\n");
+    websocket.send(JSON.stringify({}));
   };
   websocket.onclose = function(evt) {
     console.log("disconnected from jogwheel\n");
   };
   websocket.onmessage = function(evt) {
-    console.log("jogwheel message: " + evt.data + '\n');
     var data = JSON.parse(evt.data);
     if (data.localip != undefined) {
-
+        view.setLocalIp(data.localip);
     } else {
         var clicks = data.amount;
-        console.log("clicks: " + clicks);
         var axis = view.getJogAxis();
         var jogIncrement = view.getJogIncrement();
-        console.log("jogIncrement: " + jogIncrement);
         var jogDistance = clicks * jogIncrement;
-        console.log("jogDistance: " + jogDistance);
         var jogObj = {};
 
         jogObj[axis] = jogDistance;
         cnc.jog(jogObj);
     }
-
   };
   websocket.onerror = function(evt) {
     console.log("jogwheel error: " + evt.data + '\n');
