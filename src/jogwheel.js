@@ -23,6 +23,7 @@ if (hostname == 'localhost' || hostname == '127.0.0.1') {
     var data = JSON.parse(evt.data);
     if (data.localip != undefined) {
         view.setLocalIp(data.localip);
+        view.setSSID(data.SSID);
     } else {
         var clicks = data.amount;
         var axis = view.getJogAxis();
