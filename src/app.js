@@ -160,6 +160,10 @@ view.setLocalIp = function(val) {
     $('[data-route="axes"] [data-name="ipAddress"]').text(val + ":8282");
 };
 
+view.setSSID = function(val) {
+    alert(val);
+}
+
 view.getJogIncrement = function() {
   return cnc.jogIncrement;
 };
