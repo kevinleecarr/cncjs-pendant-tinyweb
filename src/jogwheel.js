@@ -22,7 +22,9 @@ if (hostname == 'localhost' || hostname == '127.0.0.1') {
   websocket.onmessage = function(evt) {
     var data = JSON.parse(evt.data);
     if (data.localip != undefined) {
-        view.setLocalIp(data.localip);
+        if (data.localip.length > 0) {
+            view.setLocalIp(data.localip);
+        }
         view.setSSID(data.SSID);
     } else {
         var clicks = data.amount;
