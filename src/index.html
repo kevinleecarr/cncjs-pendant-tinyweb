@@ -33,15 +33,10 @@
             <button type="button" class="btn btn-danger" data-name="btn-close"><i class="fa fa-power-off"></i>&nbsp;Close</button>
         </div>
     </div>
-    <div class="form-group">
-        <ul class="list-group">
-            <a href="#/axes" class="list-group-item">Axes</a>
-        </ul>
-    </div>
 </div>
 <div class="hidden" data-route="connection">
     <div data-name="msg"></div>
-    <div class="form-group">
+    <div class="form-group hidden">
         <label>Controller Type</label>
         <select class="form-control" data-name="controllerType">
             <option value="Grbl">Grbl</option>
@@ -49,11 +44,11 @@
             <option value="TinyG">TinyG</option>
         </select>
     </div>
-    <div class="form-group">
+    <div class="form-group hidden">
         <label>Port</label>
         <select class="form-control" data-name="port"></select>
     </div>
-    <div class="form-group">
+    <div class="form-group hidden">
         <label>Baud rate</label>
         <select class="form-control" data-name="baudrate">
             <option value="250000">250000</option>
@@ -66,8 +61,29 @@
             <option value="2400">2400</option>
         </select>
     </div>
+    <div class="form-group clearfix">
+        <div class="pull-left">
+            <input type="text" class="form-control" data-name="port" readonly value="" />
+        </div>
+        <div class="btn-group pull-right">
+            <button type="button" class="btn btn-primary" data-name="btn-open">Open</button>
+        </div>
+    </div>
+</div>
+<div class="hidden" data-route="wifi-settings">
+    <div class="form-group">
+        <label>SSID</label>
+        <select id="ssid" class="form-control" data-name="ssid">
+        </select>
+        <input type="text" class="form-control" data-name="ssid-other" value="" />
+    </div>
+
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" class="form-control" data-name="wifi-password" value="" />
+    </div>
     <div class="form-group" style="margin-bottom: 0 ">
-        <button type="button" class="btn btn-primary" data-name="btn-open">Open</button>
+        <button type="button" class="btn btn-primary" data-name="btn-save-wifi">Save</button>
     </div>
 </div>
 <div class="hidden" data-route="axes">
@@ -91,9 +107,8 @@
                                     <li>
                                         <a role="menuitem" href="javascript:void(0)" onclick="cnc.controller.command('reset')"><i class="fa fa-undo"></i>&nbsp;&nbsp;&nbsp;Reset / Reboot</a>
                                     </li>
-                                    <li role="separator" class="divider"></li>
                                     <li>
-                                        <a role="menuitem" href="#/workspace"><i class="fa fa-chevron-left"></i>&nbsp;Back</a>
+                                        <a role="menuitem" href="#/wifi-settings"><i class="fa fa-wifi"></i>&nbsp;&nbsp;&nbsp;Wifi Settings</a>
                                     </li>
                                 </ul>
                             </div>
@@ -410,7 +425,7 @@ $('document').ready(function() {
     root.cnc.router = window.Router({
         '/': function() {
             if (root.cnc.connected) {
-                window.location = '#/workspace';
+                window.location = '#/axes';
             } else {
                 window.location = '#/connection';
             }
@@ -420,6 +435,8 @@ $('document').ready(function() {
         '/connection': function() {
         },
         '/axes': function() {
+        },
+        '/wifi-settings': function() {
         }
     });
     root.cnc.router.configure({

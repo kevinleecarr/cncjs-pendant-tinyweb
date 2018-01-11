@@ -6,6 +6,9 @@ body { cursor: none !important; }
 [data-route="connection"] {
   padding: 10px;
 }
+[data-route="wifi-settings"] {
+  padding: 10px;
+}
 [data-route="axes"] {
   padding: 5px;
   font-size: 14px;

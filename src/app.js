@@ -93,6 +93,7 @@ controller.on('serialport:open', function(options) {
     cnc.baudrate = baudrate;
 
     $('[data-route="workspace"] [data-name="port"]').val(port);
+    $('[data-route="connection"] [data-name="port"]').val(port);
 
     Cookies.set('cnc.controllerType', controllerType);
     Cookies.set('cnc.port', port);
@@ -161,8 +162,22 @@ view.setLocalIp = function(val) {
 };
 
 view.setSSID = function(val) {
-    alert(val);
+    view.SSID = val;
+    $("#ssid").html('');
+    view.SSID.forEach(function(item, index) {
+        $("#ssid").append($('<option/>',
+            {
+               value: item,
+               text : item
+            }
+        ));
+    });
+    $('[data-route="wifi-settings"] [data-name="ssid-other"]').val(
+            $('[data-route="wifi-settings"] [data-name="ssid"]').val()
+    );
 }
+
+view.setSSID(['Hello','World','<>']);
 
 view.getJogIncrement = function() {
   return cnc.jogIncrement;
@@ -463,10 +478,27 @@ controller.on('TinyG:state', function(data) {
 
 controller.listAllPorts();
 
+// Wifi Settings
+$('[data-route="wifi-settings"] [data-name="btn-save-wifi"]').on('click', function() {
+    websocket.send(JSON.stringify({
+        ssid : $('[data-route="wifi-settings"] [data-name="ssid-other"]').val(),
+        password : $('[data-route="wifi-settings"] [data-name="wifi-password"]').val()
+    }));
+    root.location = "#/";
+});
+$('[data-route="wifi-settings"] [data-name="ssid"]').on('change', function() {
+    $('[data-route="wifi-settings"] [data-name="ssid-other"]').val(
+        $('[data-route="wifi-settings"] [data-name="ssid"]').val()
+    );
+});
+
 // Workspace
 $('[data-route="workspace"] [data-name="port"]').val('');
 $('[data-route="workspace"] [data-name="btn-close"]').on('click', function() {
     controller.closePort();
+});
+$('[data-route="workspace"] [data-name="btn-wifi-settings"]').on('click', function() {
+    root.location = "#/wifi-settings";
 });
 
 //
