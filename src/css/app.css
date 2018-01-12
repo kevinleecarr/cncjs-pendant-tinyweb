@@ -9,6 +9,9 @@ body { cursor: none !important; }
 [data-route="wifi-settings"] {
   padding: 10px;
 }
+[data-route="alert"] {
+  padding: 10px;
+}
 [data-route="wifi-settings"] select {
   font-size: 24px;
   line-height: 24px;
@@ -26,6 +29,11 @@ body { cursor: none !important; }
   font-weight: 800;
 }
 [data-route="wifi-settings"] .btn {
+  font-size: 24px;
+  line-height: 50px;
+  font-weight: 800;
+}
+[data-route="alert"] .btn {
   font-size: 24px;
   line-height: 50px;
   font-weight: 800;

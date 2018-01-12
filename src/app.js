@@ -16,6 +16,22 @@ cnc.updateModalView = function(units) {
   $('[data-route="axes"] [data-name="offsetTitle"]').text("Offset " + view.getJogAxis() + " (" + units + "):");
 }
 
+view.alert = function(message, callback) {
+    $('[data-route="alert"] [data-name="alert-msg"]').html(message);
+    root.location = "#/alert";
+
+    $('[data-route="alert"] [data-name="btn-alert"]').unbind('click');
+
+    $('[data-route="alert"] [data-name="btn-alert"]')
+        .on('click', function() {
+            root.location = "#/";
+            if (callback) {
+                callback();
+            }
+        });
+
+}
+
 cnc.setJogAxis = function(axis) {
   cnc.jogAxis = axis;
   cnc.updateModalView(cnc.units);
@@ -270,14 +286,21 @@ cnc.spindleM5 = function() {
 
 cnc.handleRun = function() {
   const workflowState = controller.workflowState;
+
+  // jogging: s: idle w: Run
+  // running program s: running w: Run
+  // Feedhold when jogging s: idle w: Hold
+  // Feedhold when running program s: paused w: Hold
+  // M1 when running program s: paused w: Idle
+  // Not running program, not held s: idle w: Idle
+
   if (workflowState === WORKFLOW_STATE_RUNNING) {
-      controller.command('gcode:pause');
-  }
-  if (workflowState === WORKFLOW_STATE_IDLE) {
-      controller.command('gcode:start');
-  }
-  if (workflowState === WORKFLOW_STATE_PAUSED) {
-      controller.command('gcode:resume');
+     controller.command('gcode:pause');
+  } else if (cnc.controller.state.status.activeState == 'Hold'
+    || workflowState === WORKFLOW_STATE_PAUSED) {
+     controller.command('gcode:resume');
+  } else {
+     controller.command('gcode:start');
   }
 };
 
@@ -288,6 +311,13 @@ cnc.handlePause = function() {
 controller.on('serialport:read', function(data) {
     var style = 'font-weight: bold; line-height: 20px; padding: 2px 4px; border: 1px solid; color: #222; background: #F5F5F5';
     console.log('%cR%c', style, '', data);
+    if (data.includes("Soft limit")) {
+        view.alert(data + '<br/>Click OK to RESET / reboot the machine.<br/>Warning: any program state will be lost.',
+        function() {
+            cnc.controller.command('reset');
+        });
+    }
+
 });
 
 // GRBL reports position in units according to the $13 setting,
@@ -478,6 +508,12 @@ controller.on('TinyG:state', function(data) {
 
 controller.listAllPorts();
 
+
+// Alert
+$('[data-route="alert"] [data-name="btn-alert"]').on('click', function() {
+    root.location = "#/";
+});
+
 // Wifi Settings
 $('[data-route="wifi-settings"] [data-name="btn-save-wifi"]').on('click', function() {
     websocket.send(JSON.stringify({
@@ -554,10 +590,10 @@ $('#myModalSpindle').on('shown.bs.modal', function () {
     }, 100);
 });
 
-$('#myModalSpindle').on('shown.bs.modal', function () {
-    setTimeout(function (){
-        $('#travelToInput').focus();
-    }, 100);
+$('[data-route="axes"] #spindleInput').keyup(function(event) {
+    if (event.keyCode === 13) {
+        $("#myModalSpindleM3").click();
+    }
 });
 
 $('[data-route="axes"] .resetOnFreshModal').keydown(function(event) {
@@ -579,6 +615,13 @@ $('[data-route="axes"] #offsetInput').keyup(function(event) {
         $("#myModalToolOffsetOk").click();
     }
 });
+
+$('[data-route="wifi-settings"] [data-name="wifi-password"]').keyup(function(event) {
+    if (event.keyCode === 13) {
+        $('[data-route="wifi-settings"] [data-name="btn-save-wifi"]').click();
+    }
+});
+
 
 $(document).keydown(function (e) {
     if (view.modalOpen) {

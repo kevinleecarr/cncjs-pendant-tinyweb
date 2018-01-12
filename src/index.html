@@ -87,6 +87,14 @@
         <button type="button" class="col-xs-6 btn btn-primary" data-name="btn-save-wifi">Save</button>
     </div>
 </div>
+<div class="hidden" data-route="alert">
+    <H1 class="" data-name="alert-msg">
+
+    </H1>
+    <div class="form-group" style="margin-bottom: 0 ">
+        <button type="button" class="col-xs-12 btn btn-primary" data-name="btn-alert">OK</button>
+    </div>
+</div>
 <div class="hidden" data-route="axes">
     <div class="nav-panel">
         <div class="container-fluid">
@@ -192,7 +200,7 @@
           <br/>
           <div class="row no-gutter">
               <div class="col-xs-12">
-                <button id="myModalOk" type="button" class="btn btn-default" data-dismiss="modal"
+                <button id="myModalOk" type="button" class="btn btn-primary" data-dismiss="modal"
                     onclick="var params = {}; params[view.getJogAxis()] =  document.getElementById('travelToInput').value; cnc.move(params);">OK</button>
               </div>
           </div>
@@ -231,7 +239,7 @@
           <br/>
           <div class="row no-gutter">
               <div class="col-xs-12">
-                <button id="myModalToolOffsetOk" type="button" class="btn btn-default" data-dismiss="modal"
+                <button id="myModalToolOffsetOk" type="button" class="btn btn-primary" data-dismiss="modal"
                     onclick="cnc.zeroMachine(document.getElementById('offsetInput').value);">OK</button>
               </div>
           </div>
@@ -270,15 +278,11 @@
             </div>
             <br/>
             <div class="row no-gutter">
-                <div class="col-xs-4">
-                  <button id="myModalSpindleM3" type="button" class="btn btn-default" data-dismiss="modal"
+                <div class="col-xs-6">
+                  <button id="myModalSpindleM3" type="button" class="btn btn-primary" data-dismiss="modal"
                       onclick="cnc.spindleM3(document.getElementById('spindleInput').value);">M3</button>
                 </div>
-                <div class="col-xs-4">
-                  <button id="myModalSpindleM4" type="button" class="btn btn-default" data-dismiss="modal"
-                          onclick="cnc.spindleM4(document.getElementById('spindleInput').value);">M4</button>
-                </div>
-                <div class="col-xs-4">
+                <div class="col-xs-6">
                   <button id="myModalSpindleM5" type="button" class="btn btn-default" data-dismiss="modal"
                           onclick="cnc.spindleM5();">M5</button>
                 </div>
@@ -438,6 +442,8 @@ $('document').ready(function() {
         '/axes': function() {
         },
         '/wifi-settings': function() {
+        },
+        '/alert': function() {
         }
     });
     root.cnc.router.configure({
