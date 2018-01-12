@@ -117,6 +117,8 @@ controller.on('serialport:open', function(options) {
 
     root.location = '#/axes';
 
+    controller.writeln('$$');
+
     cnc.loadPart();
 });
 
@@ -550,6 +552,10 @@ $('[data-route="connection"] [data-name="btn-open"]').on('click', function() {
         controllerType: controllerType,
         baudrate: Number(baudrate)
     });
+});
+
+$('[data-route="connection"] [data-name="btn-wifi"]').on('click', function() {
+    root.location="#/wifi-settings";
 });
 
 //
