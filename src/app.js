@@ -313,7 +313,8 @@ cnc.handlePause = function() {
 controller.on('serialport:read', function(data) {
     var style = 'font-weight: bold; line-height: 20px; padding: 2px 4px; border: 1px solid; color: #222; background: #F5F5F5';
     console.log('%cR%c', style, '', data);
-    if (data.includes("ALARM:2 (Soft limit)")) {
+    if (data.includes("ALARM:2 (Soft limit)")
+     || data.includes("ALARM:1 (Hard limit)")) {
         view.alert(data + '<br/>Click OK to RESET / reboot the machine.<br/>Warning: any program state will be lost.',
         function() {
             cnc.controller.command('reset');
