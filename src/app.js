@@ -349,14 +349,14 @@ controller.on('serialport:write', function(data) {
 var savedGrblState;
 function getStatusText(workflowState, activeState) {
     if (activeState == 'Run') {
-        if (workflowState == idle) {
+        if (workflowState == 'idle') {
             return 'Running';
         } else {
             return 'Running Program';
         }
     }
     if (activeState == 'Hold') {
-        if (workflowState == idle) {
+        if (workflowState == 'idle') {
             return 'Hold';
         } else {
             return 'Running Program - Hold';
@@ -443,6 +443,7 @@ controller.on('workflow:state', function(data) {
 });
 
 controller.on('Grbl:settings', function(data) {
+cnc.controller.state.status.activeState + ' / ' + data
     var settings = data.settings || {};
     if (settings['$13'] !== undefined) {
         grblReportingUnits = Number(settings['$13']) || 0;
