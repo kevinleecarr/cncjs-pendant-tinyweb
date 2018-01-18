@@ -290,20 +290,21 @@ cnc.handleRun = function() {
   const workflowState = controller.workflowState;
 
   // jogging: s: idle w: Run
-  // running program s: running w: Run
-  // Feedhold when jogging s: idle w: Hold
-  // Feedhold when running program s: paused w: Hold
-  // M1 when running program s: paused w: Idle
+  // running program s: running/paused w: Run/Idle - pause
+  // Feedhold when jogging s: idle w: Hold - resume
+  // Feedhold when running program s: paused w: Hold - resume
+  // M1 when running program s: paused w: Idle - resume
   // Not running program, not held s: idle w: Idle
 
-  if (workflowState === WORKFLOW_STATE_RUNNING) {
-     controller.command('gcode:pause');
-  } else if (cnc.controller.state.status.activeState == 'Hold'
-    || workflowState === WORKFLOW_STATE_PAUSED) {
-     controller.command('gcode:resume');
-  } else {
-     controller.command('gcode:start');
-  }
+     if (cnc.controller.state.status.activeState == 'Hold') {
+        controller.command('cyclestart');
+     } else if (cnc.controller.state.status.activeState == 'Run') {
+        controller.command('feedhold');
+     } else if (workflowState == WORKFLOW_STATE_IDLE) {
+        controller.command('gcode:start');
+     } else if (workflowState == WORKFLOW_STATE_PAUSED) {
+        controller.command('gcode:resume');
+     }
 };
 
 cnc.handlePause = function() {
@@ -346,6 +347,36 @@ controller.on('serialport:write', function(data) {
 
 // This is a copy of the Grbl:state report that came in before the Grbl:settings report
 var savedGrblState;
+function getStatusText(workflowState, activeState) {
+    if (activeState == 'Run') {
+        if (workflowState == 'idle') {
+            return 'Running';
+        } else {
+            return 'Running Program';
+        }
+    }
+    if (activeState == 'Hold') {
+        if (workflowState == 'idle') {
+            return 'Hold';
+        } else {
+            return 'Running Program - Hold';
+        }
+    }
+    if (activeState == 'Idle' && workflowState == 'idle') {
+        return 'Program Ready';
+    }
+    if (activeState == 'Idle' && workflowState == 'running') {
+        return 'Running Program';
+    }
+    if (activeState == 'Idle' && workflowState == 'paused') {
+        return 'Program Paused';
+    }
+    return activeState + ' / ' + workflowState;
+}
+
+function setStatusText(workflowState, activeState) {
+    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(workflowState, activeState));
+}
 
 function renderGrblState(data) {
     var status = data.status || {};
@@ -393,7 +424,6 @@ function renderGrblState(data) {
     wpos.z = (wpos.z * factor).toFixed(digits);
 
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
-    $('[data-route="axes"] [data-name="active-state"]').text(activeState);
     $('[data-route="axes"] [data-name="mpos-label"]').text(mlabel);
     $('[data-route="axes"] [data-name="mpos-x"]').text(mpos.x);
     $('[data-route="axes"] [data-name="mpos-y"]').text(mpos.y);
@@ -412,6 +442,11 @@ controller.on('Grbl:state', function(data) {
     } else {
         renderGrblState(data);
     }
+    setStatusText(controller.workflowState, data.status.activeState);
+});
+
+controller.on('workflow:state', function(data) {
+    setStatusText(data, cnc.controller.state.status.activeState);
 });
 
 controller.on('Grbl:settings', function(data) {
