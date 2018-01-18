@@ -426,7 +426,7 @@ function renderGrblState(data) {
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
     $('[data-route="axes"] [data-name="mpos-label"]').text(mlabel);
     $('[data-route="axes"] [data-name="mpos-x"]').text(mpos.x);
-    $('[data-route="axes"] [data-name="mpos-y"]').text(mpos.y);cnc.controller.state.
+    $('[data-route="axes"] [data-name="mpos-y"]').text(mpos.y);
     $('[data-route="axes"] [data-name="mpos-z"]').text(mpos.z);
     $('[data-route="axes"] [data-name="wpos-label"]').text(wlabel);
     $('[data-route="axes"] [data-name="wpos-x"]').text(wpos.x);
