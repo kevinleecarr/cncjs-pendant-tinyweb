@@ -347,6 +347,29 @@ controller.on('serialport:write', function(data) {
 
 // This is a copy of the Grbl:state report that came in before the Grbl:settings report
 var savedGrblState;
+function getStatusText(workflowState, activeState) {
+    if (activeState == 'Run') {
+        if (workflowState == idle) {
+            return 'Running';
+        } else {
+            return 'Running Program';
+        }
+    }
+    if (activeState == 'Hold') {
+        if (workflowState == idle) {
+            return 'Hold';
+        } else {
+            return 'Running Program - Hold';
+        }
+    }
+    if (activeState == 'Idle' && workflowState == 'idle') {
+        return 'Program Ready';
+    }
+    if (activeState == 'Idle' && workflowState == 'paused') {
+        return 'Program Paused';
+    }
+    return activeState + ' \ ' + workflowState;
+}
 
 function renderGrblState(data) {
     var status = data.status || {};
