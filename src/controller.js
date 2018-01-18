@@ -114,10 +114,12 @@ var CNCController = function() {
             }
             if (eventName === 'workflow:state') {
                 this.workflowState = args[0];
+                console.log('workflowState: ' + this.workflowState);
             }
             if (eventName === 'Grbl:state') {
                 this.type = GRBL;
                 this.state = args[0];
+                console.log('state: ' + this.state.status.activeState);
             }
             if (eventName === 'Grbl:settings') {
                 this.type = GRBL;
