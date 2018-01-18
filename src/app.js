@@ -298,9 +298,10 @@ cnc.handleRun = function() {
 
 console.log(cnc.controller.state.status.activeState);
   if (cnc.controller.state.status.activeState == 'Idle'
-    && workflowState === WORKFLOW_STATE_IDLE) {
+    && workflowState == WORKFLOW_STATE_IDLE) {
      controller.command('gcode:start');
-  } else if (cnc.controller.state.status.activeState == 'Run') {
+  } else if (cnc.controller.state.status.activeState == 'Run'
+    && workflowState != WORKFLOW_STATE_RUNNING) {
      controller.command('gcode:pause');
   } else {
      controller.command('gcode:resume');
