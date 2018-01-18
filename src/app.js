@@ -394,7 +394,7 @@ function renderGrblState(data) {
     wpos.z = (wpos.z * factor).toFixed(digits);
 
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
-    $('[data-route="axes"] [data-name="active-state"]').text(cnc.controller.state.status.activeState + ' \ ' + controller.workflowState);
+    $('[data-route="axes"] [data-name="active-state"]').text(cnc.controller.state.status.activeState + ' / ' + controller.workflowState);
     $('[data-route="axes"] [data-name="mpos-label"]').text(mlabel);
     $('[data-route="axes"] [data-name="mpos-x"]').text(mpos.x);
     $('[data-route="axes"] [data-name="mpos-y"]').text(mpos.y);
@@ -412,11 +412,11 @@ controller.on('Grbl:state', function(data) {
         savedGrblState = JSON.parse(JSON.stringify(data));
     } else {
         renderGrblState(data);
-    }
+    }gcode:start
 });
 
 controller.on('workflow:state', function(data) {
-    $('[data-route="axes"] [data-name="active-state"]').text(cnc.controller.state.status.activeState + ' \ ' + data.workflowState);
+    $('[data-route="axes"] [data-name="active-state"]').text(cnc.controller.state.status.activeState + ' / ' + data);
 });
 
 controller.on('Grbl:settings', function(data) {
