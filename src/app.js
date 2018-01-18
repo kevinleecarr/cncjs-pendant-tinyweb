@@ -417,7 +417,7 @@ function renderGrblState(data) {
     wpos.z = (wpos.z * factor).toFixed(digits);
 
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
-    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(controller.workflowState, cnc.controller.state.status.activeState));
+    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(controller.workflowState, status.activeState));
     $('[data-route="axes"] [data-name="mpos-label"]').text(mlabel);
     $('[data-route="axes"] [data-name="mpos-x"]').text(mpos.x);
     $('[data-route="axes"] [data-name="mpos-y"]').text(mpos.y);
