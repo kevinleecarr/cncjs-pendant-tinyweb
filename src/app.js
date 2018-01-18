@@ -365,6 +365,9 @@ function getStatusText(workflowState, activeState) {
     if (activeState == 'Idle' && workflowState == 'idle') {
         return 'Program Ready';
     }
+    if (activeState == 'Idle' && workflowState == 'running') {
+        return 'Program Paused';
+    }
     if (activeState == 'Idle' && workflowState == 'paused') {
         return 'Program Paused';
     }
@@ -417,7 +420,6 @@ function renderGrblState(data) {
     wpos.z = (wpos.z * factor).toFixed(digits);
 
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
-    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(controller.workflowState, status.activeState));
     $('[data-route="axes"] [data-name="mpos-label"]').text(mlabel);
     $('[data-route="axes"] [data-name="mpos-x"]').text(mpos.x);
     $('[data-route="axes"] [data-name="mpos-y"]').text(mpos.y);cnc.controller.state.
@@ -436,6 +438,7 @@ controller.on('Grbl:state', function(data) {
     } else {
         renderGrblState(data);
     }
+    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(controller.workflowState, data.status.activeState));
 });
 
 controller.on('workflow:state', function(data) {
