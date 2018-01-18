@@ -368,7 +368,7 @@ function getStatusText(workflowState, activeState) {
     if (activeState == 'Idle' && workflowState == 'paused') {
         return 'Program Paused';
     }
-    return activeState + ' \ ' + workflowState;
+    return activeState + ' / ' + workflowState;
 }
 
 function renderGrblState(data) {
@@ -417,7 +417,7 @@ function renderGrblState(data) {
     wpos.z = (wpos.z * factor).toFixed(digits);
 
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
-    $('[data-route="axes"] [data-name="active-state"]').text(cnc.controller.state.status.activeState + ' / ' + controller.workflowState);
+    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(controller.workflowState, cnc.controller.state.status.activeState));
     $('[data-route="axes"] [data-name="mpos-label"]').text(mlabel);
     $('[data-route="axes"] [data-name="mpos-x"]').text(mpos.x);
     $('[data-route="axes"] [data-name="mpos-y"]').text(mpos.y);
@@ -439,9 +439,9 @@ controller.on('Grbl:state', function(data) {
 });
 
 controller.on('workflow:state', function(data) {
-    $('[data-route="axes"] [data-name="active-state"]').text(cnc.controller.state.status.activeState + ' / ' + data);
+    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(data, cnc.controller.state.status.activeState));
 });
-
+cnc.controller.state.status.activeState + ' / ' + data
 controller.on('Grbl:settings', function(data) {
     var settings = data.settings || {};
     if (settings['$13'] !== undefined) {
