@@ -394,7 +394,7 @@ function renderGrblState(data) {
     wpos.z = (wpos.z * factor).toFixed(digits);
 
     $('[data-route="axes"] .control-pad .btn').prop('disabled', !canClick);
-    $('[data-route="axes"] [data-name="active-state"]').text(activeState);
+    $('[data-route="axes"] [data-name="active-state"]').text(cnc.controller.state.status.activeState + ' \ ' + controller.workflowState);
     $('[data-route="axes"] [data-name="mpos-label"]').text(mlabel);
     $('[data-route="axes"] [data-name="mpos-x"]').text(mpos.x);
     $('[data-route="axes"] [data-name="mpos-y"]').text(mpos.y);
@@ -413,6 +413,10 @@ controller.on('Grbl:state', function(data) {
     } else {
         renderGrblState(data);
     }
+});
+
+controller.on('workflow:state', function(data) {
+    $('[data-route="axes"] [data-name="active-state"]').text(cnc.controller.state.status.activeState + ' \ ' + data.workflowState);
 });
 
 controller.on('Grbl:settings', function(data) {
