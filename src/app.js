@@ -435,7 +435,7 @@ controller.on('Grbl:state', function(data) {
         savedGrblState = JSON.parse(JSON.stringify(data));
     } else {
         renderGrblState(data);
-    }gcode:start
+    }
 });
 
 controller.on('workflow:state', function(data) {
