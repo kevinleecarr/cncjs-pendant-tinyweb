@@ -366,7 +366,7 @@ function getStatusText(workflowState, activeState) {
         return 'Program Ready';
     }
     if (activeState == 'Idle' && workflowState == 'running') {
-        return 'Program Paused';
+        return 'Running Program';
     }
     if (activeState == 'Idle' && workflowState == 'paused') {
         return 'Program Paused';
