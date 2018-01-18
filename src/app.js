@@ -374,6 +374,10 @@ function getStatusText(workflowState, activeState) {
     return activeState + ' / ' + workflowState;
 }
 
+function setStatusText(workflowState, activeState) {
+    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(workflowState, activeState));
+}
+
 function renderGrblState(data) {
     var status = data.status || {};
     var activeState = status.activeState;
@@ -438,11 +442,11 @@ controller.on('Grbl:state', function(data) {
     } else {
         renderGrblState(data);
     }
-    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(controller.workflowState, data.status.activeState));
+    setStatusText(controller.workflowState, data.status.activeState);
 });
 
 controller.on('workflow:state', function(data) {
-    $('[data-route="axes"] [data-name="active-state"]').text(getStatusText(data, cnc.controller.state.status.activeState));
+    setStatusText(data, cnc.controller.state.status.activeState);
 });
 
 controller.on('Grbl:settings', function(data) {
