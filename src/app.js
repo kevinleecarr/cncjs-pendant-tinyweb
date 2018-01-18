@@ -297,7 +297,7 @@ cnc.handleRun = function() {
   // Not running program, not held s: idle w: Idle
 
 console.log(cnc.controller.state.status.activeState);
-  if (cnc.controller.state.status.activeState == 'Idle') {
+  if (cnc.controller.state.status.activeState == 'Idle'
     && workflowState === WORKFLOW_STATE_IDLE) {
      controller.command('gcode:start');
   } else if (cnc.controller.state.status.activeState == 'Hold') {
