@@ -296,15 +296,22 @@ cnc.handleRun = function() {
   // M1 when running program s: paused w: Idle - resume
   // Not running program, not held s: idle w: Idle
 
-console.log(cnc.controller.state.status.activeState);
-  if (cnc.controller.state.status.activeState == 'Idle'
-    && workflowState == WORKFLOW_STATE_IDLE) {
-     controller.command('gcode:start');
-  } else if (cnc.controller.state.status.activeState == 'Run'
-    && workflowState != WORKFLOW_STATE_RUNNING) {
-     controller.command('gcode:pause');
-  } else {
-     controller.command('gcode:resume');
+  if (workflowState == WORKFLOW_STATE_IDLE) {
+     if (cnc.controller.state.status.activeState == 'Idle') {
+         controller.command('gcode:start');
+     } else if (cnc.controller.state.status.activeState == 'Run') {
+         controller.command('feedhold');
+     } else if (cnc.controller.state.status.activeState == 'Hold') {
+         controller.command('cyclestart');
+     }
+  } else if (workflowState == WORKFLOW_STATE_RUNNING) {
+     controller.command('feedhold');
+  } else if (workflowState == WORKFLOW_STATE_PAUSED) {
+     if (cnc.controller.state.status.activeState == 'Hold') {
+        controller.command('cyclestart');
+     } else {
+        controller.command('gcode:resume');
+     }
   }
 };
 
