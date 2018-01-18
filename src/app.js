@@ -305,7 +305,11 @@ cnc.handleRun = function() {
          controller.command('cyclestart');
      }
   } else if (workflowState == WORKFLOW_STATE_RUNNING) {
-     controller.command('feedhold');
+     if (cnc.controller.state.status.activeState == 'Hold') {
+         controller.command('cyclestart');
+     } else {
+         controller.command('feedhold');
+     }
   } else if (workflowState == WORKFLOW_STATE_PAUSED) {
      if (cnc.controller.state.status.activeState == 'Hold') {
         controller.command('cyclestart');
